@@ -35,7 +35,7 @@ conda activate open3denv
 3. Run the transformation estimation code:
 
 ```bash
-visualization.ipynb
+python estimate_rigid_transform.py
 ```
 
 ## Visualization
