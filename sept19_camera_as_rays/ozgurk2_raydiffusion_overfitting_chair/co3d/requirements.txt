@@ -1,0 +1,4 @@
+visdom
+tqdm
+requests
+h5py
