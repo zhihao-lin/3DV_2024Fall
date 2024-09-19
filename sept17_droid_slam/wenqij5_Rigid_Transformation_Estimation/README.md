@@ -28,7 +28,7 @@ conda activate open3denv
 
 ## Usage
 
-1. Download and unzip [Tartanair]([URL](https://cmu.box.com/s/5ycmyx1q3vumesl0bozfze1a54ejwgmq)) sample data
+1. Download and unzip [Tartanair](https://cmu.box.com/s/5ycmyx1q3vumesl0bozfze1a54ejwgmq) sample data
 
 2. Update loading path in `estimate_rigid_transform.py`
 
