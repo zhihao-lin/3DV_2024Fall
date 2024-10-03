@@ -1,0 +1,56 @@
+training:
+  resume: False  # If True, must set hydra.run.dir accordingly
+  pretrain_path: ""
+  interval_visualize: 50
+  interval_save_checkpoint: 100
+  interval_delete_checkpoint: 100000
+  interval_evaluate: 100000
+  delete_all_checkpoints_after_training: False
+  lr: 1e-4
+  mixed_precision: True
+  matmul_precision: high 
+  max_iterations: 10000
+  batch_size: 1
+  num_workers: 8
+  gpu_id: 0
+  freeze_encoder: True
+  seed: 0
+  job_key: ""  # Use this for submitit sweeps where timestamps might collide
+  translation_scale: 1.0
+  regression: False
+  load_extra_cameras: True
+  calculate_intrinsics: False
+  normalize_first_camera: False
+
+model:
+  pred_x0: True
+  model_type: dit
+  num_patches_x: 16
+  num_patches_y: 16
+  depth: 16
+  num_images: 8
+  random_num_images: False
+  feature_extractor: dino
+  append_ndc: True
+
+noise_scheduler:
+  type: linear
+  max_timesteps: 100
+  beta_start: 0.0001
+  beta_end: 0.2
+
+dataset:
+  name: ''
+  category: "all_train"
+  apply_augmentation: True
+
+debug:
+  wandb: True
+  project_name: cameras_as_rays_github
+  anomaly_detection: False
+
+hydra:
+  run:
+    dir: ./output/corrupted_R_T_noise=0.1
+    # dir: /home/exx/Documents/SSD/Samsung8TB_2/chaitu/RayDiffusion/output/0917_194912_961371/
+  output_subdir: hydra
