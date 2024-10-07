@@ -1,3 +1,5 @@
+This demo is implemented based on https://github.com/maurock/DeepSDF/tree/main. The following is the `readme.md` of the original project.
+
 # DeepSDF
 Implementation of the paper [DeepSDF: Learning Continuous Signed Distance Functions for Shape Representation](https://openaccess.thecvf.com/content_CVPR_2019/html/Park_DeepSDF_Learning_Continuous_Signed_Distance_Functions_for_Shape_Representation_CVPR_2019_paper.html). The goal if this repository is to provide a simple and intuitive implementation of the DeepSDF model that can be installed with just a single line of code. Step-to-step instructions on data extraction, training, reconstruction and shape completion are provided. Please note: this is not the official implementation. For the official implementation and citation guidelines, please refer to the [original repository](https://github.com/facebookresearch/DeepSDF).
 
