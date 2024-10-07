@@ -1,0 +1,25 @@
+# Config file for reconstructing objects from latent code
+
+# folder_sdf: '17_07_172540'   
+# obj_ids: ['02942699/5d42d432ec71bfa1d5004b533b242ce6']   
+
+# folder_sdf: '17_07_172540'   
+# obj_ids: 
+# - '03797390/ea127b5b9ba0696967699ff4ba91a25'
+# - '02876657/e9371d3abbb3bb7265bca0cae1ecfff5'
+# - '02942699/5d42d432ec71bfa1d5004b533b242ce6'
+# - '03797390/ea127b5b9ba0696967699ff4ba91a25'
+# - '02942699/5d42d432ec71bfa1d5004b533b242ce6'
+# - '02876657/e9371d3abbb3bb7265bca0cae1ecfff5'
+# - '03797390/ea127b5b9ba0696967699ff4ba91a25'
+
+folder_sdf: 'nerfsyn'   
+obj_ids: 
+- 'chair/chair'
+- 'hotdog/hotdog'
+- 'lego/lego'
+- 'mic/mic'
+- 'chair/chair'
+  
+
+resolution: 256
