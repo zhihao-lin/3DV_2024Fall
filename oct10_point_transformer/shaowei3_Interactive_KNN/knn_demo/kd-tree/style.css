@@ -1,0 +1,16 @@
+svg {
+  border: 1px solid #DDD;
+}
+
+#binarytree {
+  float: left;
+  width: 50%;
+}
+
+#kdtree {
+  float: left;
+  width: 50%;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
