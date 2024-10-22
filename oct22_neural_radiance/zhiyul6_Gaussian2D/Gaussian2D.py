@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 
 class Gaussian2DModel:
-    def __init__(self, numGaussians, targetImgNormalized, densify=False):
+    def __init__(self, numGaussians, targetImgNormalized):
         """
         numGaussians 初始 2D Gaussian 数量
         targetImg 经过归一化的
@@ -22,12 +22,14 @@ class Gaussian2DModel:
         self.imgHeight = imgHeight
         self.imgWidth = imgWidth
         
+        self.sigmaRange = 10
+
         # np.random.rand 生成的随机数在 [0, 1) 之间
         self.x0 = torch.tensor(np.random.rand(numGaussians) * self.imgHeight, requires_grad=True, device=self.device)
         self.y0 = torch.tensor(np.random.rand(numGaussians) * self.imgWidth, requires_grad=True, device=self.device)
         
-        self.sigmaX = torch.tensor(np.random.rand(numGaussians) * 10, requires_grad=True, device=self.device)
-        self.sigmaY = torch.tensor(np.random.rand(numGaussians) * 10, requires_grad=True, device=self.device)
+        self.sigmaX = torch.tensor(np.random.rand(numGaussians) * self.sigmaRange, requires_grad=True, device=self.device)
+        self.sigmaY = torch.tensor(np.random.rand(numGaussians) * self.sigmaRange, requires_grad=True, device=self.device)
         
         self.theta = torch.tensor(np.random.rand(numGaussians) * 2* np.pi - np.pi, requires_grad=True, device=self.device)
         
@@ -35,7 +37,7 @@ class Gaussian2DModel:
         self.cG = torch.tensor(np.random.rand(numGaussians), requires_grad=True, device=self.device)
         self.cB = torch.tensor(np.random.rand(numGaussians), requires_grad=True, device=self.device)
         
-        self.alpha = torch.tensor(np.random.rand(numGaussians) * 0.5, requires_grad=True, device=self.device)  # 透明度
+        self.alpha = torch.tensor(np.random.rand(numGaussians) * 0.25, requires_grad=True, device=self.device)  # 透明度
         
         self.rowGrid = torch.arange(0, imgHeight).unsqueeze(1).repeat(1, imgWidth).to(self.device)  # 创建一个 2D 网格
         # print(x.shape)
@@ -48,8 +50,8 @@ class Gaussian2DModel:
         self.optimizer = torch.optim.Adam([
             {'params': self.x0, 'lr': 0.01 * self.lrCoeff},
             {'params': self.y0, 'lr': 0.01 * self.lrCoeff},
-            {'params': self.sigmaX, 'lr': 0.001 * self.lrCoeff},
-            {'params': self.sigmaY, 'lr': 0.001 * self.lrCoeff},
+            {'params': self.sigmaX, 'lr': 0.02 * self.lrCoeff},
+            {'params': self.sigmaY, 'lr': 0.02 * self.lrCoeff},
             {'params': self.theta, 'lr': 0.005 * self.lrCoeff},
             {'params': self.cR, 'lr': 0.02 * self.lrCoeff},
             {'params': self.cG, 'lr': 0.02 * self.lrCoeff},
@@ -212,7 +214,57 @@ class Gaussian2DModel:
                 imageB += G * cB
 
             return torch.stack([imageB, imageG, imageR], dim=2)
-
+    
+    def densifyGaussianAtBigDiffList(self, pickTopDiffNums):
+        print("densifyGaussianAtBigDiffList add 2D Gaussian Ellipse : ", pickTopDiffNums)
+        diffTorch = (self.targetImgNormalized - self.renderImgTorch).detach()
+        diffAbsSumTorch = torch.sum(torch.abs(diffTorch), dim=-1)
+        
+        topDiffAbsVals, topDiffAbsIndex = torch.topk(diffAbsSumTorch.view(-1), pickTopDiffNums)  # view 扁平化成一维数组，以便进行排序
+        
+        new_x0 = (topDiffAbsIndex // self.imgWidth).float().requires_grad_().to(self.device)
+        new_y0 = (topDiffAbsIndex %  self.imgWidth).float().requires_grad_().to(self.device)
+        
+        # print(new_x0)
+        # print(new_y0)
+        
+        # TODO 不随机初始化方向 & 方差
+        new_theta = torch.tensor(np.random.rand(pickTopDiffNums) * 2 * np.pi - np.pi, requires_grad=True, device=self.device)
+        new_alpha = torch.tensor(np.random.rand(pickTopDiffNums) * 0.5, requires_grad=True, device=self.device)
+        
+        new_sigmaX = torch.tensor(np.random.rand(pickTopDiffNums) * self.sigmaRange, requires_grad=True, device=self.device)
+        new_sigmaY = torch.tensor(np.random.rand(pickTopDiffNums) * self.sigmaRange, requires_grad=True, device=self.device)
+        
+        # 内部存储都是 BGR
+        new_cB = diffTorch[new_x0.int(), new_y0.int(), 0].requires_grad_().to(self.device)
+        new_cG = diffTorch[new_x0.int(), new_y0.int(), 1].requires_grad_().to(self.device)
+        new_cR = diffTorch[new_x0.int(), new_y0.int(), 2].requires_grad_().to(self.device)
+        
+        self.x0 = torch.cat((self.x0.detach(), new_x0.detach())).requires_grad_()
+        self.y0 = torch.cat((self.y0.detach(), new_y0.detach())).requires_grad_()
+        self.sigmaX = torch.cat((self.sigmaX.detach(), new_sigmaX.detach())).requires_grad_()
+        self.sigmaY = torch.cat((self.sigmaY.detach(), new_sigmaY.detach())).requires_grad_()
+        self.theta = torch.cat((self.theta.detach(), new_theta.detach())).requires_grad_()
+        self.cR = torch.cat((self.cR.detach(), new_cR.detach())).requires_grad_()
+        self.cG = torch.cat((self.cG.detach(), new_cG.detach())).requires_grad_()
+        self.cB = torch.cat((self.cB.detach(), new_cB.detach())).requires_grad_()
+        self.alpha = torch.cat((self.alpha.detach(), new_alpha.detach())).requires_grad_()
+        
+        self.numGaussians += pickTopDiffNums
+       
+        # torch.cuda.empty_cache()  # 清理 GPU 的显存缓存
+        
+        self.optimizer = torch.optim.Adam([
+            {'params': self.x0, 'lr': 0.01 * self.lrCoeff},
+            {'params': self.y0, 'lr': 0.01 * self.lrCoeff},
+            {'params': self.sigmaX, 'lr': 0.001 * self.lrCoeff},
+            {'params': self.sigmaY, 'lr': 0.001 * self.lrCoeff},
+            {'params': self.theta, 'lr': 0.005 * self.lrCoeff},
+            {'params': self.cR, 'lr': 0.02 * self.lrCoeff},
+            {'params': self.cG, 'lr': 0.02 * self.lrCoeff},
+            {'params': self.cB, 'lr': 0.02 * self.lrCoeff},
+            {'params': self.alpha, 'lr': 0.01 * self.lrCoeff},
+        ])
 
 
 
