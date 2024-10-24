@@ -177,8 +177,7 @@ def generate_shape_image(shape_type='circle', image_size=256, mnist_data=None, d
     else:
         raise ValueError("Invalid shape type or missing MNIST data/digit.")
 
-    plt.imshow(shape_image)
-    plt.show()
+
     return shape_image, mask.astype(np.float32)
 
 # Data generation: Create camera parameters and corresponding 1D views
@@ -334,9 +333,7 @@ def train_network(network, cameras, images, shape_image, mask, num_epochs=2000, 
             frame = frame.reshape(fig.canvas.get_width_height()[::-1] + (3,))
             frames.append(frame)
             plt.close(fig)
-            if (epoch+1)%1000==0:
-                plt.imshow(frame)
-                plt.show()
+
 
     # Save the video
     
