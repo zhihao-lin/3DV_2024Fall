@@ -1,18 +1,18 @@
 ## Quick Start:
 
-1. Clone the [InstantSplat](https://github.com/NVlabs/InstantSplat) github (Dust3R+3dgs) and follow its set-up instructions
+1. Clone the [InstantSplat](https://github.com/NVlabs/InstantSplat) git repo (Dust3R+3dgs) and follow its set-up instructions
 ```git clone --recursive https://github.com/NVlabs/InstantSplat.git```
-2. Clone the [Mast3R](https://github.com/naver/mast3r) github and place under ```./submodule```
+2. Clone the [Mast3R](https://github.com/naver/mast3r) git repo and place it under ```./submodule```
 ```
 cd InstantSplat/submodule
 git clone --recursive https://github.com/naver/mast3r
 cd ..
 ```
-3. copy the ```run_train_infer_mast3r.sh``` to ```./script```
+3. Copy the ```run_train_infer_mast3r.sh``` to ```./script```
 ```
 cp path/to/run_train_infer_mast3r.sh ./script
 ```
-4. copy the ```coarse_init_infer_mast3r.py``` to InstantSplat base directory
+4. Copy the ```coarse_init_infer_mast3r.py``` to InstantSplat base directory
 ```
 cp path/to/coarse_init_infer_mast3r.py .
 ```
