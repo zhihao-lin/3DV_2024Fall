@@ -16,7 +16,8 @@ cp path/to/run_train_infer_mast3r.sh ./script
 ```
 cp path/to/coarse_init_infer_mast3r.py .
 ```
-5. Run Mast3R + 3dgs
+5. Modify the inputs in ```run_train_infer_mast3r.sh```
+6. Run Mast3R + 3dgs
 ```
 bash ./script/run_train_infer_mast3r.sh
 ```
