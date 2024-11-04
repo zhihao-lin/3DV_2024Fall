@@ -1,4 +1,4 @@
-## Quick Start:
+## Quick Start
 
 1. Clone the [InstantSplat](https://github.com/NVlabs/InstantSplat) git repo (Dust3R+3dgs) and follow its set-up instructions
 ```git clone --recursive https://github.com/NVlabs/InstantSplat.git```
