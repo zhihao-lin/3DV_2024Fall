@@ -1,3 +1,6 @@
+## Brief Introduction
+This is the code implementation for using Mast3R to predict camera poses and generate sparse point clouds for 3D Gaussian Splatting scene reconstruction without running COLMAP. Mast3R generates better poses for sparse input images and can be done within 1 minute.
+
 ## Quick Start
 
 1. Clone the [InstantSplat](https://github.com/NVlabs/InstantSplat) git repo (Dust3R+3dgs) and follow its set-up instructions
