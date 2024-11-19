@@ -44,12 +44,12 @@ def init():
 @ti.kernel
 def substep():
     """time step function"""
-    # 重置网格
+    # Reset the grid
     for I in ti.grouped(F_grid_m):
         F_grid_v[I] = ti.zero(F_grid_v[I])
         F_grid_m[I] = 0.0
 
-    # 粒子到网格 (P2G)
+    # P2G
     for p in range(n_particles):
         Xp = F_x[p] / dx
         base = int(Xp - 0.5)
