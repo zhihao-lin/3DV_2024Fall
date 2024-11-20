@@ -1,5 +1,5 @@
-generated_voxels/*
-rendered_images/*
-stl_models/*
-voxel_data/*
-voxel_data_augmented/*
+testing/generated_voxels/*
+testing/rendered_images/*
+testing/stl_models/*
+testing/voxel_data/*
+testing/voxel_data_augmented/*
