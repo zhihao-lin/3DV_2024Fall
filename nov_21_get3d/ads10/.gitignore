@@ -1,0 +1,5 @@
+generated_voxels/*
+rendered_images/*
+stl_models/*
+voxel_data/*
+voxel_data_augmented/*
