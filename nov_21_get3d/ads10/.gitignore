@@ -3,3 +3,8 @@ testing/rendered_images/*
 testing/stl_models/*
 testing/voxel_data/*
 testing/voxel_data_augmented/*
+
+voxel_data/*
+rendered_images/*
+stl_models/*
+DRF/*
